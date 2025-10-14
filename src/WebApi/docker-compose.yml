@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8
+    container_name: peluqueria-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: peluqueriabot
+    ports:
+      - "3307:3307"
+    volumes:
+      - dbdata:/var/lib/mysql
+    restart: always
+
+  api:
+    build:
+      context: .
+      dockerfile: WebApi/Dockerfile
+    container_name: peluqueria-api
+    depends_on:
+      - db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "5000:80"
+    volumes:
+      - ./WebApi/appsettings.Development.json:/app/appsettings.Development.json
+    restart: always
+
+volumes:
+  dbdata:
