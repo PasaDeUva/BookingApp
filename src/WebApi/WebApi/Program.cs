@@ -86,9 +86,6 @@ builder.Services.AddAuthentication("Bearer")
         };
     });
 
-var accessToken = builder.Configuration["MercadoPago:AccessToken"];
-builder.Services.AddSingleton(new MercadoPagoQrService(accessToken));
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

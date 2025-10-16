@@ -6,9 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="mercadopago-sdk" Version="2.10.0" />
-    <PackageReference Include="QRCoder" Version="1.7.0" />
-  </ItemGroup>
-
     </Project>
