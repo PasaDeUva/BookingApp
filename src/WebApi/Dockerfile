@@ -1,27 +1,25 @@
-# Etapa base (runtime)
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-WORKDIR /app
-EXPOSE 8080
-
-# Etapa build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copiar la solución y el proyecto
+# Copiar sln
 COPY WebApi.sln ./
-COPY WebApi.csproj ./
+
+# Copiar todos los proyectos
+COPY Application/ Application/
+COPY Domain/ Domain/
+COPY Infrastructure/ Infrastructure/
+COPY WebApi/ WebApi/
 
 # Restaurar dependencias
-RUN dotnet restore WebApi.csproj
+RUN dotnet restore WebApi.sln
 
-# Copiar todo el código
-COPY . ./
-
-# Compilar y publicar
-RUN dotnet publish WebApi.csproj -c Release -o /app/publish
+# Publicar
+WORKDIR /src/WebApi
+RUN dotnet publish WebApi.csproj -c Release -o /app/publish /p:UseAppHost=false
+# NOTA: ya no usamos --no-restore
 
 # Etapa final
-FROM base AS final
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "WebApi.dll"]
