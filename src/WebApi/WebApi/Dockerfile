@@ -7,18 +7,20 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copiar solución y proyectos
-COPY *.sln .
-COPY WebApi/*.csproj ./WebApi/
-COPY Manager/*.csproj ./Manager/
-COPY Repository/*.csproj ./Repository/
-COPY Domain/*.csproj ./Domain/
+# Copiar la solución desde el nivel superior
+COPY ../../BookingApp.sln ./
 
-# Restaurar paquetes
-RUN dotnet restore
+# Copiar proyectos
+COPY ../../src/WebApi/*.csproj ./WebApi/
+COPY ../../src/Manager/*.csproj ./Manager/
+COPY ../../src/Repository/*.csproj ./Repository/
+COPY ../../src/Domain/*.csproj ./Domain/
+
+# Restaurar dependencias
+RUN dotnet restore BookingApp.sln
 
 # Copiar todo el contenido del proyecto
-COPY . .
+COPY ../../src ./ 
 
 WORKDIR /src/WebApi
 RUN dotnet publish -c Release -o /app/publish
